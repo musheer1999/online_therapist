@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_auth/Screens/d_personal/d_personal.dart';
 import 'package:flutter_auth/components/rounded_input_field.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
@@ -22,7 +23,6 @@ class _BodyState extends State<Body> {
   User usercurrent = FirebaseAuth.instance.currentUser;
   String fullName;
   String mob;
-  String email;
   String add;
   String deg;
 
@@ -111,16 +111,6 @@ class _BodyState extends State<Body> {
               },
             ),
             RoundedInputField(
-              hintText: "Email Id",
-              icon: Icons.email,
-              onChanged: (value) {
-                setState(() {
-                  email = value;
-                });
-                // _email = value;
-              },
-            ),
-            RoundedInputField(
               hintText: "Adress",
               icon: Icons.home,
               onChanged: (value) {
@@ -141,7 +131,9 @@ class _BodyState extends State<Body> {
               },
             ),
             SizedBox(height: size.height * 0.05),
-            Adduser(fullName, mob, email, add, deg, usercurrent.uid, _image),
+            Adduser(fullName, mob, usercurrent.email, add, deg, usercurrent.uid,
+                _image),
+
             // AddUser(widget.user.user.uid, name, company, age),
           ],
         ),
@@ -152,7 +144,6 @@ class _BodyState extends State<Body> {
   input() {
     print(add);
     print(deg);
-    print(email);
     print(mob);
   }
 }

@@ -98,7 +98,7 @@ class _BodyState extends State<Body> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => Select(), fullscreenDialog: true));
+                builder: (context) => Select(user), fullscreenDialog: true));
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
           print('No user found for that email.');

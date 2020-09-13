@@ -1,10 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_auth/Screens/d_personal/d_personal.dart';
+import 'package:flutter_auth/Screens/patient/body.dart';
 import 'package:flutter_auth/Screens/patient/patient.dart';
 import 'package:flutter_auth/Screens/therapist/therapist.dart';
+import 'package:flutter_auth/Screens/userdata/user.dart';
 import 'package:flutter_auth/components/rounded_button.dart';
 import 'package:flutter_auth/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Body extends StatefulWidget {
+  final UserCredential user;
+
+  Body(this.user);
   @override
   _BodyState createState() => _BodyState();
 }
@@ -31,14 +39,7 @@ class _BodyState extends State<Body> {
           RoundedButton(
             text: "Give Service",
             press: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return Therapist();
-                  },
-                ),
-              );
+              navi(context, widget.user.user.email);
             },
           ),
           RoundedButton(
@@ -46,18 +47,71 @@ class _BodyState extends State<Body> {
             color: kPrimaryLightColor,
             textColor: Colors.black,
             press: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return Patient();
-                  },
-                ),
-              );
+              navi2(context, widget.user.user.email, widget.user);
             },
           ),
         ],
       ),
     );
   }
+}
+
+void navi2(context, user, p) {
+  Iterable<String> x;
+  int i = 0;
+  FirebaseFirestore.instance
+      .collection("user")
+      .get()
+      .then((QuerySnapshot snapshot) {
+    x = snapshot.docs.map((f) => f.data()["email"].toString());
+  }).then((value) => {
+            // print(x[1]),
+            x.any((element) => element == user)
+                ? Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return Patient(p);
+                      },
+                    ),
+                  )
+                : Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return Users(p);
+                      },
+                    ),
+                  )
+          });
+}
+
+void navi(context, user) {
+  Iterable<String> x;
+  int i = 0;
+  FirebaseFirestore.instance
+      .collection("user2")
+      .get()
+      .then((QuerySnapshot snapshot) {
+    x = snapshot.docs.map((f) => f.data()["email"].toString());
+  }).then((value) => {
+            // print(x[1]),
+            x.any((element) => element == user)
+                ? Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return Dpersonal();
+                      },
+                    ),
+                  )
+                : Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return Therapist();
+                      },
+                    ),
+                  )
+          });
 }

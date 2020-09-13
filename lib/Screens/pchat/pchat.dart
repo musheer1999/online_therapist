@@ -1,26 +1,23 @@
-import 'package:flutter/material.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_auth/Screens/pchat/pchat.dart';
-import 'package:flutter_auth/Screens/therapist_screen/therapist_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_auth/Screens/chat/chat.dart';
+import 'package:flutter_auth/Screens/patient/patient.dart';
+import 'package:flutter_auth/components/circular_button.dart';
 
 import '../../constants.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'dart:io';
-import 'package:path/path.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
-class Patient extends StatefulWidget {
+class Pchat extends StatefulWidget {
   final UserCredential user;
 
-  Patient(this.user);
+  Pchat(this.user);
   @override
-  _PatientState createState() => _PatientState();
+  _PchatState createState() => _PchatState();
 }
 
-class _PatientState extends State<Patient> {
-  int _currentTab = 1;
+class _PchatState extends State<Pchat> {
+  int _currentTab = 0;
   Future<String> url(String context) async {
     final ref = FirebaseStorage.instance.ref().child(context);
 // no need of the file extension, the name will do fine.
@@ -33,12 +30,10 @@ class _PatientState extends State<Patient> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          children: [Icon(Icons.local_hospital), Text("Therapists")],
-        ),
+        title: Text("chats"),
       ),
       body: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance.collection('user2').snapshots(),
+          stream: FirebaseFirestore.instance.collection('user').snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {
@@ -54,44 +49,60 @@ class _PatientState extends State<Patient> {
                 return Stack(
                   children: [
                     GestureDetector(
-                      onTap: () => Navigator.push(context, MaterialPageRoute(
-                        builder: (context) {
-                          return TherapistScreen(document.id.toString(),
-                              document.data(), widget.user);
-                        },
-                      )),
+                      onTap: () => print("the user is selected to chats"),
                       child: new Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: new Container(
-                            height: 150.0,
+                            width: 400.0,
+                            height: 110.0,
                             decoration: BoxDecoration(
                                 color: kPrimaryLightColor,
                                 borderRadius: BorderRadius.circular(20.0)),
                             child: Padding(
                               padding:
                                   EdgeInsets.fromLTRB(120.0, 20.0, 20.0, 20.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
-                                  Text(
-                                    document.data()["full_name"],
-                                    style: TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Row(
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Icon(
-                                        Icons.school,
-                                        color: kPrimaryColor,
-                                      ),
                                       Text(
-                                        (document.data()["degree"]).toString(),
+                                        document.data()["full_name"],
+                                        style: TextStyle(
+                                            fontSize: 20.0,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.home,
+                                            color: Colors.black45,
+                                          ),
+                                          Text(
+                                            document.data()["degree"],
+                                            style: TextStyle(
+                                                fontSize: 15.0,
+                                                fontWeight: FontWeight.w400),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                  Text(document.data()["address"].toString()),
+                                  CircularButton(
+                                    press: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => Chat(
+                                              user: widget.user,
+                                              email: document.data()["email"]),
+                                        ),
+                                      );
+                                    },
+                                  )
                                 ],
                               ),
                             )),
@@ -104,9 +115,8 @@ class _PatientState extends State<Patient> {
                           return Positioned(
                               left: 20.0,
                               top: 15.0,
-                              bottom: 15.0,
                               child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20.0),
+                                borderRadius: BorderRadius.circular(200.0),
                                 child: Image.network(
                                   "https://firebasestorage.googleapis.com/v0/b/hackathin-7db2f.appspot.com/o/default.png?alt=media&token=bc384991-0530-49b6-8a02-ef442e9baf70",
                                   fit: BoxFit.fill,
@@ -118,14 +128,13 @@ class _PatientState extends State<Patient> {
                           return Positioned(
                               left: 20.0,
                               top: 15.0,
-                              bottom: 15.0,
                               child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20.0),
+                                borderRadius: BorderRadius.circular(45.0),
                                 child: Image.network(
                                   snapshot.data,
                                   fit: BoxFit.fill,
                                   width: 90.0,
-                                  height: 100.0,
+                                  height: 90.0,
                                 ),
                               ));
                         }
@@ -144,10 +153,10 @@ class _PatientState extends State<Patient> {
           setState(() {
             _currentTab = value;
           });
-          if (_currentTab == 1) {
+          if (_currentTab == 0) {
             Navigator.push(context, MaterialPageRoute(
               builder: (context) {
-                return Pchat(widget.user);
+                return Patient(widget.user);
               },
             ));
           }
@@ -176,16 +185,3 @@ class _PatientState extends State<Patient> {
     );
   }
 }
-
-// Padding(
-//                   padding: const EdgeInsets.all(8.0),
-//                   child: new Container(
-//                     height: 150.0,
-//                     decoration: BoxDecoration(
-//                         color: Colors.grey,
-//                         borderRadius: BorderRadius.circular(20.0)),
-//                   ),
-//                 );
-
-//  title: new Text(document.data()['full_name']),
-//                   subtitle: new Text(document.data()['degree']),

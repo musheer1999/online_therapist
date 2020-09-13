@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth/Screens/d_personal/d_personal.dart';
+import 'package:flutter_auth/Screens/patient/patient.dart';
 import 'package:flutter_auth/components/rounded_button.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,7 +10,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 import 'package:path/path.dart';
 
-class Adduser extends StatelessWidget {
+class Adduser2 extends StatefulWidget {
   final String fullName;
   final String mob;
   final String email;
@@ -16,24 +18,24 @@ class Adduser extends StatelessWidget {
   final String deg;
   final String uid;
   final File _image;
-  Adduser(
-    this.fullName,
-    this.mob,
-    this.email,
-    this.add,
-    this.deg,
-    this.uid,
-    this._image,
-  );
+  final UserCredential pas;
+  Adduser2(this.fullName, this.mob, this.email, this.add, this.deg, this.uid,
+      this._image, this.pas);
+
+  @override
+  _Adduser2State createState() => _Adduser2State();
+}
+
+class _Adduser2State extends State<Adduser2> {
   @override
   Widget build(BuildContext context) {
-    CollectionReference users2 = FirebaseFirestore.instance.collection('user2');
+    CollectionReference users2 = FirebaseFirestore.instance.collection('user');
 
-    Future<void> addUser() async {
-      String fileName = basename(uid);
+    Future<void> addUser2() async {
+      String fileName = basename(widget.uid);
       StorageReference firebaseStorageRef =
           FirebaseStorage.instance.ref().child(fileName);
-      StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
+      StorageUploadTask uploadTask = firebaseStorageRef.putFile(widget._image);
 
       StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
       var downloadUrl = await firebaseStorageRef.getDownloadURL();
@@ -42,22 +44,22 @@ class Adduser extends StatelessWidget {
 
       // Call the user's CollectionReference to add a new user
       return users2
-          .doc(uid)
+          .doc(widget.uid)
           .set({
-            'full_name': fullName, // John Doe
-            'Mob': mob, // Stokes and Sons
-            'email': email,
-            'address': add,
-            'degree': deg, // 42
+            'full_name': widget.fullName, // John Doe
+            'Mob': widget.mob, // Stokes and Sons
+            'email': widget.email,
+            'address': widget.add,
+            'degree': widget.deg, // 42
           })
-          .then((value) => print("User Added $uid $fullName"))
+          .then((value) => print("User Added ${widget.uid} ${widget.fullName}"))
           .catchError((error) => print("Failed to add user: $error"));
 
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) {
-            return Dpersonal();
+            return Patient(widget.pas);
           },
         ),
       );
@@ -66,7 +68,7 @@ class Adduser extends StatelessWidget {
     return RoundedButton(
       text: "Register",
       press: () {
-        addUser();
+        addUser2();
       },
     );
   }

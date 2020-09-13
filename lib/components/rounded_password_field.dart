@@ -11,6 +11,7 @@ class RoundedPasswordField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool passwords = true;
     return TextFieldContainer(
       child: TextFormField(
         validator: (input) {
@@ -18,7 +19,7 @@ class RoundedPasswordField extends StatelessWidget {
             return 'the length of password should be greator than 6';
           }
         },
-        obscureText: true,
+        obscureText: passwords,
         onChanged: onChanged,
         cursorColor: kPrimaryColor,
         decoration: InputDecoration(
