@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_auth/Screens/Blog/Wblog.dart';
 import 'package:flutter_auth/Screens/patient/patient.dart';
 import 'package:flutter_auth/Screens/pchat/pchat.dart';
 
@@ -67,6 +68,15 @@ class _BlogState extends State<Blog> {
               ),
               title: SizedBox.shrink())
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Navigator.push(context, MaterialPageRoute(
+          builder: (context) {
+            return Wblog(widget.user);
+          },
+        )),
+        tooltip: 'Increment',
+        child: Icon(Icons.mode_edit),
       ),
     );
   }
