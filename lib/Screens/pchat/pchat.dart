@@ -31,7 +31,15 @@ class _PchatState extends State<Pchat> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("chats"),
+        title: Row(
+          children: [
+            Icon(Icons.chat_bubble_outline),
+            SizedBox(
+              width: 10.0,
+            ),
+            Text("Chats"),
+          ],
+        ),
       ),
       body: StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance.collection('user').snapshots(),
