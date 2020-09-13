@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_auth/Screens/chat/chat.dart';
 import 'package:flutter_auth/Screens/d_personal/d_personal.dart';
 import 'package:flutter_auth/Screens/patient/body.dart';
 import 'package:flutter_auth/Screens/patient/patient.dart';
+import 'package:flutter_auth/Screens/pchat/pchat.dart';
 import 'package:flutter_auth/Screens/therapist/therapist.dart';
 import 'package:flutter_auth/Screens/userdata/user.dart';
 import 'package:flutter_auth/components/rounded_button.dart';
@@ -39,7 +41,7 @@ class _BodyState extends State<Body> {
           RoundedButton(
             text: "Give Service",
             press: () {
-              navi(context, widget.user.user.email);
+              navi(context, widget.user.user.email, widget.user);
             },
           ),
           RoundedButton(
@@ -86,7 +88,7 @@ void navi2(context, user, p) {
           });
 }
 
-void navi(context, user) {
+void navi(context, user, p) {
   Iterable<String> x;
   int i = 0;
   FirebaseFirestore.instance
@@ -101,7 +103,7 @@ void navi(context, user) {
                     context,
                     MaterialPageRoute(
                       builder: (context) {
-                        return Dpersonal();
+                        return Dpersonal(p);
                       },
                     ),
                   )

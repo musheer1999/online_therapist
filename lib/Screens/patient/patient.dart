@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_auth/Screens/Blog/blog.dart';
 import 'package:flutter_auth/Screens/pchat/pchat.dart';
 import 'package:flutter_auth/Screens/therapist_screen/therapist_screen.dart';
 
@@ -20,7 +21,7 @@ class Patient extends StatefulWidget {
 }
 
 class _PatientState extends State<Patient> {
-  int _currentTab = 1;
+  int _currentTab = 0;
   Future<String> url(String context) async {
     final ref = FirebaseStorage.instance.ref().child(context);
 // no need of the file extension, the name will do fine.
@@ -150,6 +151,18 @@ class _PatientState extends State<Patient> {
                 return Pchat(widget.user);
               },
             ));
+          }
+          if (_currentTab == 2) {
+            Navigator.push(context, MaterialPageRoute(
+              builder: (context) {
+                return Blog(widget.user);
+              },
+            ));
+            // Navigator.push(context, MaterialPageRoute(
+            //   builder: (context) {
+            //     return Patient(widget.user);
+            //   },
+            // ));
           }
         },
         items: [

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_auth/Screens/d_personal/d_personal.dart';
+import 'package:flutter_auth/Screens/select/select_screen.dart';
 import 'package:flutter_auth/components/rounded_button.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -53,14 +54,14 @@ class Adduser extends StatelessWidget {
           .then((value) => print("User Added $uid $fullName"))
           .catchError((error) => print("Failed to add user: $error"));
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) {
-            return Dpersonal();
-          },
-        ),
-      );
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) {
+      //       return Select();
+      //     },
+      //   ),
+      // );
     }
 
     return RoundedButton(

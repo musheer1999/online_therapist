@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_auth/Screens/Blog/blog.dart';
 import 'package:flutter_auth/Screens/chat/chat.dart';
 import 'package:flutter_auth/Screens/patient/patient.dart';
 import 'package:flutter_auth/components/circular_button.dart';
@@ -17,7 +18,7 @@ class Pchat extends StatefulWidget {
 }
 
 class _PchatState extends State<Pchat> {
-  int _currentTab = 0;
+  int _currentTab = 1;
   Future<String> url(String context) async {
     final ref = FirebaseStorage.instance.ref().child(context);
 // no need of the file extension, the name will do fine.
@@ -160,6 +161,18 @@ class _PchatState extends State<Pchat> {
               },
             ));
           }
+          if (_currentTab == 2) {
+            Navigator.push(context, MaterialPageRoute(
+              builder: (context) {
+                return Blog(widget.user);
+              },
+            ));
+            // Navigator.push(context, MaterialPageRoute(
+            //   builder: (context) {
+            //     return Patient(widget.user);
+            //   },
+            // ));
+          }
         },
         items: [
           BottomNavigationBarItem(
@@ -176,7 +189,7 @@ class _PchatState extends State<Pchat> {
               title: SizedBox.shrink()),
           BottomNavigationBarItem(
               icon: Icon(
-                Icons.person,
+                Icons.mode_edit,
                 size: 30.0,
               ),
               title: SizedBox.shrink())
